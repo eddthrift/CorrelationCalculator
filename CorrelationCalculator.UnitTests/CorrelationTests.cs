@@ -9,6 +9,7 @@ namespace CorrelationCalculator.UnitTests
         [TestMethod]
         public void TestMethod1()
         {
+            //Test method 1
         }
     }
 }
