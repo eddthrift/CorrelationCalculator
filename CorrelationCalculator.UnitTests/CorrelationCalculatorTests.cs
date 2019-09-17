@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CorrelationCalculator.UnitTests
 {
     [TestClass]
-    public class CorrelationTests
+    public class CorrelationCalculatorTests
     {
         [TestMethod]
         public void TestMethod1()
