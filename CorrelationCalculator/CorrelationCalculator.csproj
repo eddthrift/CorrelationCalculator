@@ -64,7 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserInput.cs" />
     <Compile Include="Correlations.cs" />
     <Compile Include="DataColumn.cs" />
     <Compile Include="CorrelationCalculator.cs" />

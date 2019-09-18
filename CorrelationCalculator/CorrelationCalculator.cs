@@ -53,7 +53,7 @@ namespace CorrelationCalculator
             {
                 // Allow user to input file path.
                 Console.WriteLine("Please enter the file path of your data file. Hit ENTER to confirm.");
-                filePath = UserInput.InputString();
+                filePath = Console.ReadLine();
 
                 try
                 {

@@ -7,7 +7,7 @@ namespace CorrelationCalculator
     /// <summary>
     ///     Class to hold the correlation calculations.
     /// </summary>
-    static class Correlations
+    public static class Correlations
     {
         public static decimal pearson;
         public static decimal spearman;
@@ -50,7 +50,7 @@ namespace CorrelationCalculator
             CalculateCovarianceAndStDev();
             PearsonCoefficient();
             SpearmanCoefficient();
-            KendallCoefficient();
+            KendallBCoefficient();
 
             Console.WriteLine("Calculating statistics for " + firstHeader + " and " + secondHeader + "\n");
             Console.WriteLine("The Pearson Coefficient is: " + pearson.ToString());
@@ -184,38 +184,45 @@ namespace CorrelationCalculator
             stDevXRank = Sqrt(stDevXRankSquared);
             stDevYRank = Sqrt(stDevYRankSquared);
         }
-
+        
         /// <summary>
-        ///     Calculates the Tau - a Kendall coefficient of the given dataset.
+        ///     Calculates the Tau - B Kendall coefficient of the given dataset. Accounts for pairs in the data.
         /// </summary>
-        private static void KendallCoefficient()
+        public static void KendallBCoefficient()
         {
             IList<Tuple<RankedDatum, RankedDatum>> pairedData = new List<Tuple<RankedDatum, RankedDatum>>();
 
+            int n = rankedSetX.Count();
+
+            // Kendalls tau b = (c - d) / sqrt( (n0 - n1)(n0 - n2) )
+            decimal cMinusD = 0;
+            int n0 = ((n) * (n - 1) / 2);
+            int n1 = 0;
+            int n2 = 0;
 
             // Create paired data list and order by set X
-            for (int i = 0; i < rankedSetX.Count; i++)
+            for (int i = 0; i < n; i++)
             {
                 pairedData.Add(new Tuple<RankedDatum, RankedDatum>(rankedSetX[i], rankedSetY[i]));
             }
-
-            pairedData = pairedData.OrderBy(dataPair => dataPair.Item1.Rank).ToList();
-
-            // Initialise variables to count the number of concordant and discordant pairs
-            decimal c = 0;
-            decimal d = 0;
-            int n = pairedData.Count();
-
-            // Ties are neither concordant or discordant
-            for (int i = 0; i < pairedData.Count; i++)
+            pairedData = pairedData.OrderBy(dataPair => dataPair.Item1.Rank)
+                                   .ThenBy(dataPair => dataPair.Item2.Rank)
+                                   .ToList();
+            
+            for (int i = 0; i < n; i++)
             {
-                c += pairedData.Skip(i + 1).Where(pair => pair.Item2.Rank > pairedData[i].Item2.Rank).Count();
-                d += pairedData.Skip(i + 1).Where(pair => pair.Item2.Rank < pairedData[i].Item2.Rank).Count();
+                for(int j = n-1; j > i; j--)
+                {
+                    if(pairedData[j].Item2.Rank > pairedData[i].Item2.Rank) cMinusD += 1;
+                    else cMinusD -= 1;
+
+                    // Count duplicate values
+                    if(pairedData[j].Item1.Datum == pairedData[i].Item1.Datum) n1++;
+                    if(pairedData[j].Item2.Datum == pairedData[i].Item2.Datum) n2++;
+                } 
             }
 
-            // Kendalls tau a = (C – D) / (n(n-1)/2)  
-            // C = sum of the concordant pairs, D = sum of discordant, n = number of measurements
-            kendall = (c - d) / ((n) * (n - 1) / 2);
+            kendall = (cMinusD) / Sqrt((n0 - n1)*(n0 - n2));
         }
 
         /// <summary>

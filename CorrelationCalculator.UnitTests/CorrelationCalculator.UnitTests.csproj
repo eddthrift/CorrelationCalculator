@@ -71,12 +71,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CorrelationsTests.cs" />
-    <Compile Include="CorrelationCalculatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CorrelationCalculator\CorrelationCalculator.csproj">
+      <Project>{d79eb1b0-45c5-4ea3-a8c8-048a4ffc3570}</Project>
+      <Name>CorrelationCalculator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
